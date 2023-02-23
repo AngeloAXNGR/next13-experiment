@@ -5,7 +5,7 @@ export const generateStaticParams = async() => {
   const res = await data.json();
 
 	return res.results.map((movie:any) => ({
-		movie: toString(movie.id)
+		movie: movie.id.toString(),
 	}))
 }
 
