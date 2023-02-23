@@ -1,13 +1,13 @@
 import Image from "next/image"
 
-export const generateStaticParams = async() => {
-	const data = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`)
-  const res = await data.json();
+// export const generateStaticParams = async() => {
+// 	const data = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`)
+//   const res = await data.json();
 
-	return res.results.map((movie:any) => ({
-		movie: movie.id.toString(),
-	}))
-}
+// 	return res.results.map((movie:any) => ({
+// 		movie: movie.id.toString(),
+// 	}))
+// }
 
 const MovieDetail = async ({ params }:any) => {
 	const imagePath = `https://image.tmdb.org/t/p/original`
