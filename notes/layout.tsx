@@ -21,7 +21,18 @@ export default function RootLayout({
       */}
       <head />
 
-      <body className={`${montserrat.className} mx-32 my-12`}>
+      <body className={`${montserrat.className} mx-32`}>
+        <nav>
+          <h1>Logo</h1>
+          <ul className="font-montserrat">
+            <li>
+              <a href="/about">About</a>
+            </li>
+            <li>
+              <a href="/signup">Sign Up</a>
+            </li>
+          </ul>
+        </nav>
         {children}
       </body>
     </html>

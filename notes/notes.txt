@@ -1,0 +1,78 @@
+How routing is done in Next 13
+	//page.tsx is the naming convention, the name of the subfolder
+	// will dictate the route name
+	= app/<folder_name>/page.tsx (Example: app/about)
+	= type /about and you will see contents of about page
+
+	//For dynamic routes, wrap folder name with square brackets
+	= app/[<folder_name>]/page.tsx
+	= where [<folder_name>] is the dynamic route (e.g app/{movie})
+
+How to get url params on redirect
+	= Pass "params" like a prop in a component
+	= For Example:
+		const MovieDetails = async({params}) => {
+			console.log(params)
+			return(
+				// component here
+			)
+		}
+
+head.tsx
+	= contains meta data of a webpage (including page title, style imports, etc.)
+
+error.tsx
+	= file to handle errors (failed api fetch and other errors)
+
+
+loading.tsx
+	= basically a loading screen if for some reason, fetching data takes quite a while to finish
+
+.env.local
+ 	= file to hide sensitive info such as api key
+
+Notes on Server Side components
+	= NextJS renders components on the server side unlike React
+	= What this means is that you cannot add events(onClick, onChange, etc) as well as
+	  hooks(useState, useEffect) on the components
+	= To make a client side component (Component that behaves like in react): 
+		add 'use client' at the top of the file
+	= use 'useClient' if you want to make use of React hooks
+	= In the case of fetching data, it is not ideal to use useEffect for NextJS, 
+	  instead just declare a variable 
+	= Example:
+		// Server side fetch (NextJS Approach)
+		// DO THIS
+		const data = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key${process.env.API_KEY}`)
+
+		INSTEAD OF
+		React.useEffect(() => {
+			const data = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key${process.env.API_KEY}`)
+		},[])
+
+Fetch Data in specific intervals
+	= Code:
+		const data = await fetch(`https://api.themoviedb.org/3/movie/${movie}?api_key=${process.env.API_KEY}`,
+		// revalidate 0 = fetch only once, turn it to 60 and it will fetch every 60 seconds
+		// alternatively, use 'export const revalidate = 60'
+		{next:{revalidate: 0}}); 
+	= If you're not using fetch api, you cant use {next:{revalidate:0}}, do
+	  export const revalidate = 0 instead and use the revalidate on whatever fetching method
+		you use.
+
+
+Static Rendering
+	= Pre render certain elements so that it wont have to load again upon redirecting 
+	  to a resource
+	= Example: Loading all movie posters so that when we select a movie from the home page and
+	  get redirected to the movie details page, that specific movie is already loaded
+		
+		// Place this on top of the code
+		export const generateStaticParams = async() => {
+			const data = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`)
+			const res = await data.json();
+
+			return res.results.map((movie:any) => {
+				movie: toString(movie.id)
+			})
+		}
